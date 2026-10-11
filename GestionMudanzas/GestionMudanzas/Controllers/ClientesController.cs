@@ -1,9 +1,9 @@
 ﻿
 using GestionMudanzas.Data;
 using GestionMudanzas.DTOs;
+using GestionMudanzas.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GestionMudanzas.Models;
 
 namespace GestionMudanzas.Controllers
 {

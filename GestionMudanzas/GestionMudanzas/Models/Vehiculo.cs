@@ -1,5 +1,8 @@
-﻿namespace GestionMudanzas.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace GestionMudanzas.Models
 {
+    [Index(nameof(Matricula), IsUnique = true)]
     public class Vehiculo
     {
         public int Id { get; set; }

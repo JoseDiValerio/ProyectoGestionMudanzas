@@ -49,6 +49,41 @@ namespace GestionMudanzas.Migrations
 
                     b.ToTable("Clientes");
                 });
+
+            modelBuilder.Entity("GestionMudanzas.Models.Vehiculo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CapacidadCarga")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Marca")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Matricula")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Matricula")
+                        .IsUnique();
+
+                    b.ToTable("Vehiculos");
+                });
 #pragma warning restore 612, 618
         }
     }
