@@ -203,6 +203,5 @@ namespace GestionMudanzas.Controllers
 
             return Ok(vehiculos);
         }
-
     }
 }
