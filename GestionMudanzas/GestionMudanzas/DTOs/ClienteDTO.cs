@@ -6,6 +6,5 @@
         public string Telefono { get; set; } = "";
         public string CorreoElectronico { get; set; } = "";
         public string Direccion { get; set; } = "";
-
     }
 }
