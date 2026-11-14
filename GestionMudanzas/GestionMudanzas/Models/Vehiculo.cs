@@ -11,6 +11,5 @@ namespace GestionMudanzas.Models
         public string Modelo { get; set; } = "";
         public int CapacidadCarga { get; set; }
         public string Estado { get; set; } = "Disponible";
-
     }
 }

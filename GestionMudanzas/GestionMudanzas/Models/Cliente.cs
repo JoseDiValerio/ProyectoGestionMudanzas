@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace GestionMudanzas.Models
+﻿namespace GestionMudanzas.Models
 {
     public class Cliente
     {
