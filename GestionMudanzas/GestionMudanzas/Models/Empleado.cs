@@ -18,7 +18,6 @@ namespace GestionMudanzas.Models
 
         public string Estado { get; set; } = "Activo";
 
-        public ICollection<MudanzaEmpleado> MudanzasEmpleados { get; set; }
-            = new List<MudanzaEmpleado>();
+        public ICollection<MudanzaEmpleado> MudanzasEmpleados { get; set; } = new List<MudanzaEmpleado>();
     }
 }
