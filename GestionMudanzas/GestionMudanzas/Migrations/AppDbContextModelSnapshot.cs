@@ -51,6 +51,42 @@ namespace GestionMudanzas.Migrations
                     b.ToTable("Clientes");
                 });
 
+            modelBuilder.Entity("GestionMudanzas.Models.Empleado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Cargo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorreoElectronico")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreCompleto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CorreoElectronico")
+                        .IsUnique();
+
+                    b.ToTable("Empleados");
+                });
+
             modelBuilder.Entity("GestionMudanzas.Models.Mudanza", b =>
                 {
                     b.Property<int>("Id")
@@ -90,6 +126,21 @@ namespace GestionMudanzas.Migrations
                     b.HasIndex("VehiculoId");
 
                     b.ToTable("Mudanzas");
+                });
+
+            modelBuilder.Entity("GestionMudanzas.Models.MudanzaEmpleado", b =>
+                {
+                    b.Property<int>("MudanzaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmpleadoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MudanzaId", "EmpleadoId");
+
+                    b.HasIndex("EmpleadoId");
+
+                    b.ToTable("MudanzasEmpleados");
                 });
 
             modelBuilder.Entity("GestionMudanzas.Models.Vehiculo", b =>
@@ -144,6 +195,35 @@ namespace GestionMudanzas.Migrations
                     b.Navigation("Cliente");
 
                     b.Navigation("Vehiculo");
+                });
+
+            modelBuilder.Entity("GestionMudanzas.Models.MudanzaEmpleado", b =>
+                {
+                    b.HasOne("GestionMudanzas.Models.Empleado", "Empleado")
+                        .WithMany("MudanzasEmpleados")
+                        .HasForeignKey("EmpleadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GestionMudanzas.Models.Mudanza", "Mudanza")
+                        .WithMany("MudanzasEmpleados")
+                        .HasForeignKey("MudanzaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
+
+                    b.Navigation("Mudanza");
+                });
+
+            modelBuilder.Entity("GestionMudanzas.Models.Empleado", b =>
+                {
+                    b.Navigation("MudanzasEmpleados");
+                });
+
+            modelBuilder.Entity("GestionMudanzas.Models.Mudanza", b =>
+                {
+                    b.Navigation("MudanzasEmpleados");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,5 +12,7 @@
         public string DireccionDestino { get; set; } = "";
         public decimal Costo { get; set; }
         public string Estado { get; set; } = "Pendiente";
+
+        public ICollection<MudanzaEmpleado> MudanzasEmpleados { get; set; } = new List<MudanzaEmpleado>();
     }
 }
