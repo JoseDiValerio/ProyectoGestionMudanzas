@@ -42,7 +42,7 @@ namespace GestionMudanzas.Controllers
             return Ok(empleado);
         }
 
-        // 3. REGISTRAR EMPLEADO
+        // 3. REGISTRAR UN EMPLEADO
         [HttpPost]
         public async Task<IActionResult> RegistrarEmpleado(
             EmpleadoDTO datos)
