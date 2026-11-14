@@ -46,7 +46,7 @@ namespace GestionMudanzas.Controllers
             return Ok(mudanza);
         }
 
-        // 3. REGISTRAR UNA MUDANZA
+        // 3. REGISTRAR MUDANZA
         [HttpPost]
         public async Task<IActionResult> RegistrarMudanza(
             MudanzaDTO datos)
