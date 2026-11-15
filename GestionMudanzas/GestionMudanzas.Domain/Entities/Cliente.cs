@@ -1,8 +1,9 @@
-﻿namespace GestionMudanzas.Models
+using GestionMudanzas.Domain.Core;
+
+namespace GestionMudanzas.Domain.Entities
 {
-    public class Cliente
+    public class Cliente : BaseEntity
     {
-        public int Id { get; set; }
         public string NombreCompleto { get; set; } = "";
         public string Telefono { get; set; } = "";
         public string CorreoElectronico { get; set; } = "";

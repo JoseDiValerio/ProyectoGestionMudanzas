@@ -1,6 +1,6 @@
-﻿using GestionMudanzas.Data;
+using GestionMudanzas.Infrastructure.Context;
 using GestionMudanzas.DTOs;
-using GestionMudanzas.Models;
+using GestionMudanzas.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

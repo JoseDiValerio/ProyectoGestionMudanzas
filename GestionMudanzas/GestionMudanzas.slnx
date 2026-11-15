@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="GestionMudanzas.Application/GestionMudanzas.Application.csproj" />
+  <Project Path="GestionMudanzas.Domain/GestionMudanzas.Domain.csproj" Id="76144fe7-a33b-443c-8017-d196ee47d69f" />
+  <Project Path="GestionMudanzas.Infrastructure/GestionMudanzas.Infrastructure.csproj" Id="658f4221-d02f-4bc3-a3f7-ab28e734fb89" />
   <Project Path="GestionMudanzas/GestionMudanzas.csproj" />
 </Solution>

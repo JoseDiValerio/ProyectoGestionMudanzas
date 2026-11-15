@@ -1,4 +1,4 @@
-﻿namespace GestionMudanzas.DTOs
+namespace GestionMudanzas.DTOs
 {
     public class AsignarEmpleadoDTO
     {

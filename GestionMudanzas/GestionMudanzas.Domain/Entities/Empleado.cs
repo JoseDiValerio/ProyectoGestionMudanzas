@@ -1,23 +1,14 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+using GestionMudanzas.Domain.Core;
 
-namespace GestionMudanzas.Models
+namespace GestionMudanzas.Domain.Entities
 {
-    [Index(nameof(CorreoElectronico), IsUnique = true)]
-    public class Empleado
+    public class Empleado : BaseEntity
     {
-        public int Id { get; set; }
-
         public string NombreCompleto { get; set; } = "";
-
         public string Telefono { get; set; } = "";
-
         public string CorreoElectronico { get; set; } = "";
-
         public string Cargo { get; set; } = "";
-
         public string Estado { get; set; } = "Activo";
-
         public ICollection<MudanzaEmpleado> MudanzasEmpleados { get; set; } = new List<MudanzaEmpleado>();
     }
 }

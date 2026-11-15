@@ -1,7 +1,6 @@
-﻿
-using GestionMudanzas.Data;
+using GestionMudanzas.Domain.Entities;
 using GestionMudanzas.DTOs;
-using GestionMudanzas.Models;
+using GestionMudanzas.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,153 +10,104 @@ namespace GestionMudanzas.Controllers
     [Route("api/[controller]")]
     public class ClientesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ClienteRepository _repository;
 
-        public ClientesController(AppDbContext context)
+        public ClientesController(ClienteRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        // 1. LISTAR TODOS LOS CLIENTES
         [HttpGet]
         public async Task<IActionResult> ListarClientes()
-        {
-            var clientes = await _context.Clientes.ToListAsync();
+            => Ok(await _repository.GetAllAsync());
 
-            return Ok(clientes);
-        }
-
-        // 2. CONSULTAR UN CLIENTE POR SU ID
         [HttpGet("{id}")]
         public async Task<IActionResult> ConsultarCliente(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-
-            if (cliente == null)
-            {
-                return NotFound("El cliente no existe.");
-            }
-
+            var cliente = await _repository.GetByIdAsync(id);
+            if (cliente == null) return NotFound("El cliente no existe.");
             return Ok(cliente);
         }
 
-        // 3. REGISTRAR UN CLIENTE
         [HttpPost]
         public async Task<IActionResult> RegistrarCliente(ClienteDTO datos)
         {
-            if (string.IsNullOrWhiteSpace(datos.NombreCompleto))
+            var error = Validar(datos);
+            if (error != null) return BadRequest(error);
+
+            var cliente = new Cliente
             {
-                return BadRequest("El nombre es obligatorio.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.Telefono))
-            {
-                return BadRequest("El teléfono es obligatorio.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.CorreoElectronico))
-            {
-                return BadRequest("El correo electrónico es obligatorio.");
-            }
-
-            if (!datos.CorreoElectronico.Contains("@") ||
-                !datos.CorreoElectronico.Contains("."))
-            {
-                return BadRequest("El correo electrónico no es válido.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.Direccion))
-            {
-                return BadRequest("La dirección es obligatoria.");
-            }
-
-            var cliente = new Cliente();
-
-            cliente.NombreCompleto = datos.NombreCompleto;
-            cliente.Telefono = datos.Telefono;
-            cliente.CorreoElectronico = datos.CorreoElectronico;
-            cliente.Direccion = datos.Direccion;
-
-            _context.Clientes.Add(cliente);
-
-            await _context.SaveChangesAsync();
-
-            return Ok(cliente);
-        }
-
-        // 4. EDITAR UN CLIENTE
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditarCliente(
-            int id, ClienteDTO datos)
-        {
-            var cliente = await _context.Clientes.FindAsync(id);
-
-            if (cliente == null)
-            {
-                return NotFound("El cliente no existe.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.NombreCompleto))
-            {
-                return BadRequest("El nombre es obligatorio.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.Telefono))
-            {
-                return BadRequest("El teléfono es obligatorio.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.CorreoElectronico))
-            {
-                return BadRequest("El correo electrónico es obligatorio.");
-            }
-
-            if (!datos.CorreoElectronico.Contains("@") ||
-                !datos.CorreoElectronico.Contains("."))
-            {
-                return BadRequest("El correo electrónico no es válido.");
-            }
-
-            if (string.IsNullOrWhiteSpace(datos.Direccion))
-            {
-                return BadRequest("La dirección es obligatoria.");
-            }
-
-            cliente.NombreCompleto = datos.NombreCompleto;
-            cliente.Telefono = datos.Telefono;
-            cliente.CorreoElectronico = datos.CorreoElectronico;
-            cliente.Direccion = datos.Direccion;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(cliente);
-        }
-
-        // 5. ELIMINAR UN CLIENTE
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarCliente(int id)
-        {
-            var cliente = await _context.Clientes.FindAsync(id);
-
-            if (cliente == null)
-            {
-                return NotFound("El cliente no existe.");
-            }
-
-            _context.Clientes.Remove(cliente);
+                NombreCompleto = datos.NombreCompleto.Trim(),
+                Telefono = datos.Telefono.Trim(),
+                CorreoElectronico = datos.CorreoElectronico.Trim(),
+                Direccion = datos.Direccion.Trim()
+            };
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.AddAsync(cliente);
             }
             catch (DbUpdateException)
             {
-                return BadRequest(
-                    "No se puede eliminar el cliente porque tiene servicios asociados."
-                );
+                return BadRequest("No se pudo registrar el cliente. Verifique que el correo no esté duplicado.");
+            }
+
+            return Ok(cliente);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarCliente(int id, ClienteDTO datos)
+        {
+            var cliente = await _repository.GetByIdAsync(id);
+            if (cliente == null) return NotFound("El cliente no existe.");
+
+            var error = Validar(datos);
+            if (error != null) return BadRequest(error);
+
+            cliente.NombreCompleto = datos.NombreCompleto.Trim();
+            cliente.Telefono = datos.Telefono.Trim();
+            cliente.CorreoElectronico = datos.CorreoElectronico.Trim();
+            cliente.Direccion = datos.Direccion.Trim();
+
+            try
+            {
+                await _repository.UpdateAsync(cliente);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest("No se pudo actualizar el cliente. Verifique que el correo no esté duplicado.");
+            }
+
+            return Ok(cliente);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> EliminarCliente(int id)
+        {
+            var cliente = await _repository.GetByIdAsync(id);
+            if (cliente == null) return NotFound("El cliente no existe.");
+
+            try
+            {
+                await _repository.DeleteAsync(cliente);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest("No se puede eliminar el cliente porque tiene servicios asociados.");
             }
 
             return Ok("Cliente eliminado correctamente.");
+        }
+
+        private static string? Validar(ClienteDTO datos)
+        {
+            if (string.IsNullOrWhiteSpace(datos.NombreCompleto)) return "El nombre es obligatorio.";
+            if (string.IsNullOrWhiteSpace(datos.Telefono)) return "El teléfono es obligatorio.";
+            if (string.IsNullOrWhiteSpace(datos.CorreoElectronico)) return "El correo electrónico es obligatorio.";
+            if (!datos.CorreoElectronico.Contains("@") || !datos.CorreoElectronico.Contains("."))
+                return "El correo electrónico no es válido.";
+            if (string.IsNullOrWhiteSpace(datos.Direccion)) return "La dirección es obligatoria.";
+            return null;
         }
     }
 }
