@@ -1,4 +1,4 @@
-﻿namespace GestionMudanzas.Models
+namespace GestionMudanzas.Domain.Entities
 {
     public class MudanzaEmpleado
     {

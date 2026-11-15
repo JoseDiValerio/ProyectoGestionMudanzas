@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using GestionMudanzas.Domain.Core;
 
-namespace GestionMudanzas.Models
+namespace GestionMudanzas.Domain.Entities
 {
-    [Index(nameof(Matricula), IsUnique = true)]
-    public class Vehiculo
+    public class Vehiculo : BaseEntity
     {
-        public int Id { get; set; }
         public string Matricula { get; set; } = "";
         public string Marca { get; set; } = "";
         public string Modelo { get; set; } = "";
